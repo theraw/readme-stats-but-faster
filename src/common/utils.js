@@ -184,7 +184,7 @@ const request = async (data, headers) => {
     headers,
     data,
   });
-  console.log(response.data);
+  // console.log(response.data);
   // Store the response in Redis with a 24-hour expiration time
   await redisClient.set(username, JSON.stringify(response.data), 'EX', 24 * 60 * 60);
 
