@@ -156,14 +156,40 @@ const fallbackColor = (color, fallbackColor) => {
  * @param {import('axios').AxiosRequestConfig['headers']} headers Request headers.
  * @returns {Promise<any>} Request response.
  */
-const request = (data, headers) => {
-  // @ts-ignore
-  return axios({
-    url: "https://api.github.com/graphql",
-    method: "post",
+const redisOptions = {
+  host: '172.69.0.78',
+  port: 6379,
+  username: '',
+  password: '',
+};
+// Create a Redis client with the provided configuration
+const redisClient = new redis(redisOptions);
+
+const request = async (data, headers) => {
+  const username = data.variables.login;
+
+  // Check if the response exists in Redis
+  const cachedResponse = await redisClient.get(username);
+  if (cachedResponse) {
+    // Return the response from Redis
+    console.log(`${username} HIT A CACHE`);
+    //return JSON.parse(cachedResponse);
+    return { data: JSON.parse(cachedResponse) };
+  }
+
+  // Make the request to GitHub
+  const response = await axios({
+    url: 'https://api.github.com/graphql',
+    method: 'post',
     headers,
     data,
   });
+  console.log(response.data);
+  // Store the response in Redis with a 24-hour expiration time
+  await redisClient.set(username, JSON.stringify(response.data), 'EX', 24 * 60 * 60);
+
+  // Return the response
+  return response;
 };
 
 /**
