@@ -1,0 +1,19 @@
+[Unit]
+Description=Readme Stats Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Environment="PAT_1="
+Environment="PAT_2="
+Environment="PAT_3="
+Environment="PAT_4="
+Environment="PAT_5="
+Environment="PAT_6="
+Environment="PAT_7="
+ExecStart=/usr/bin/node /srv/readme-stats-but-faster/express.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
