@@ -3,6 +3,7 @@ import axios from "axios";
 import toEmoji from "emoji-name-map";
 import wrap from "word-wrap";
 import { themes } from "../../themes/index.js";
+import Redis from 'ioredis';
 
 // Script parameters.
 const ERROR_CARD_LENGTH = 576.5;
